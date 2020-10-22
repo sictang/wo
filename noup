@@ -1,0 +1,5 @@
+#禁止ios检测升级
+
+host, updates-http.cdn-apple.com, reject
+host, gdmf.apple.com, reject
+host, mesu.apple.com, reject
