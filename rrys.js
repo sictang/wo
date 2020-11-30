@@ -12,8 +12,12 @@ const myRequest = {
 
 $task.fetch(myRequest).then(response => {
     // response.statusCode, response.headers, response.body
-    console.log(response.body);
-    $notify("Title", "Subtitle", response.body); // Success!
+    const body = response.body
+    const nickname = body.data.userinfo.nickname
+    const cont_login = body.data.usercount.cont_login
+    console.log(nickname);
+    console.log(cont_login);
+    $notify("Title", "Subtitle", nickname); // Success!
     $done();
 }, reason => {
     // reason.error
