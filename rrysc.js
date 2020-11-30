@@ -1,6 +1,6 @@
 /*
 
-^https:\/\/www\.rrys2020\.com\/User\/login\/ajaxLogin url script-request-header https://raw.githubusercontent.com/NobyDa/Script/master/Bilibili-DailyBonus/Manga.js
+^https:\/\/www\.rrys2020\.com\/User\/login\/ajaxLogin url script-request-header https://raw.githubusercontent.com/sictang/wo/main/rrysc.js
 */
 
 function getkey(key){
