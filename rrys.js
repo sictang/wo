@@ -1,13 +1,13 @@
-const url = "https://example.com/";
+const url = "http://www.rrys2020.com/user/login/getCurUserTopInfo";
 const method = "POST";
-const headers = {"Field": "test-header-param"};
+const headers = {Cookie:'GINFO=uid%3D10395821%26nickname%3Dsiaanga%26group_id%3D1%26avatar_t%3Dhttp%3A%2F%2Fimage.jstucdn.com%2Fftp%2Favatar%2Ff_noavatar_t.gif%26main_group_id%3D0%26common_group_id%3D52; GKEY=b283b63e753f6d2dbf3f5a32680d4f87'};
 const data = {"info": "abc"};
 
 const myRequest = {
     url: url,
     method: method, // Optional, default GET.
     headers: headers, // Optional.
-    body: JSON.stringify(data) // Optional.
+    //body: JSON.stringify(data)  Optional.
 };
 
 $task.fetch(myRequest).then(response => {
