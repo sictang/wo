@@ -17,7 +17,7 @@ $task.fetch(myRequest).then(response => {
     const cont_login = body.data.usercount.cont_login
     console.log(nickname);
     console.log(cont_login);
-    $notify("Title", "Subtitle", nickname); // Success!
+    $notify("Title", "Subtitle", body); // Success!
     $done();
 }, reason => {
     // reason.error
