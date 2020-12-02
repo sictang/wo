@@ -1,7 +1,7 @@
-const url = "http://www.rrys2020.com/user/login/getCurUserTopInfo";
-const method = "POST";
+const url = "https://666999.16882021.xyz/plugin.php?id=k_misign:sign&operation=qiandao&formhash=339dcedf&format=empty&inajax=1&ajaxtarget=JD_sign";
+const method = "GET";
 const headers = {};
-const data = {"info": "abc"};
+const data = {};
 
 const myRequest = {
     url: url,
@@ -13,11 +13,8 @@ const myRequest = {
 $task.fetch(myRequest).then(response => {
     // response.statusCode, response.headers, response.body
     const body = JSON.parse(response.body)
-    const nickname = body.data.userinfo.nickname
-    const cont_login = body.data.usercount.cont_login
-    console.log(nickname);
-    console.log(cont_login);
-    $notify("Title", , nickname,"签到天数:"+cont_login); // Success!
+    console.log(body);
+    $notify('', body ,'' ,); // Success!
     $done();
 }, reason => {
     // reason.error
