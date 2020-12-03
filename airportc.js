@@ -1,4 +1,4 @@
-if ($request.headers) {
+if ($request.url.match(/\/setting\/logs/)) {
   const airportCookie = 'airportCookie'
   const nowcookie = $request.headers['Cookie']
   
@@ -9,12 +9,11 @@ if ($request.headers) {
         $notify("", '', 'cookie更新成功')
         $done()
       }else{
-        $notify("", '', 'cookie无需成功')
+        $notify("", '', 'cookie无需更新')
         $done()
       }
     }else{
       $prefs.setValueForKey(nowcookie,airportCookie)
-      console.log($prefs.valueForKey(airportCookie))
       $notify("", '', 'cookie首次写入成功')
       $done()
     }
