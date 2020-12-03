@@ -1,6 +1,6 @@
 if ($request.headers) {
   const airportCookie = 'airportCookie'
-  const nowcookie = $request.headers['cookie']
+  const nowcookie = $request.headers['Cookie']
   
     if ($prefs.valueForKey(airportCookie)){
       if($prefs.valueForKey(airportCookie) != nowcookie){
