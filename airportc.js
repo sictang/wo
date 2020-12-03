@@ -18,7 +18,17 @@ if ($request.url.match(/\/setting\/logs/)) {
       $done()
     }
     $done()
+}else {
+  const myRequest = {
+    url: 'https://12o.ooo/user/checkin',
+    method: 'POST',
+    headers: { Cookie: $prefs.valueForKey('airportCookie') }
+  }
+  $task.fetch(myRequest).then(response => {
+    const body = response.body
+    console.log(body)
+  })
+$done()
 }
 
-$done()
 
