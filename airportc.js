@@ -26,6 +26,6 @@ try{
  $done()
 }
 catch(err){
- console.log(err)
+ console.log('你的语法有问题')
  $done()
 }
