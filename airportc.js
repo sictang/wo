@@ -14,6 +14,7 @@ if ($request.headers) {
       }
     }else{
       $prefs.setValueForKey(nowcookie,airportCookie)
+      console.log($prefs.valueForKey(airportCookie)
       $notify("", '', 'cookie首次写入成功')
       $done()
     }
