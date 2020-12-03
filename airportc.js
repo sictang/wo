@@ -1,23 +1,21 @@
 if ($request.headers) {
-  const airportKey = 'airportKey'
-  const airportIp = 'airportIp'
+  const airportCookie = 'airportCookie'
   const header = $request.headers
-  const regtx1 = /key=.+?;/
-  const regtx2 = /ip=.+?;/
-  if (regtx1.exec(header['Cookie']) != undefined) {
+  const regtx = /key=.+?;/
+ 
+  if (header['Cookie'] != undefined) {
 
-    if ($prefs.valueForKey(airportKey) != regtx1.exec(header['Cookie'])[0]) {
-      const key = regtx1.exec(header['Cookie'])[0]
-      const ip = regtx2.exec(header['Cookie'])[0]
+    if (regtx.exec($prefs.valueForKey(airportCookie))[0] != regtx.exec(header['Cookie'])[0]) {
+      const cookies = header['cookie'].match(/email=.+?\;|ip=.+?\;|key=.+?\;|uid=.+?\;/g)
+      const cookie = cookies[0]+cookies[1]+cookies[2]+cookies[3]
+      $prefs.setValueForKey(cookie, airportCookie)
 
-      $prefs.setValueForKey(key, airportKey)
-      $prefs.setValueForKey(ip, airportIp)
-      console.log($prefs.valueForKey(key,ip))
+      
       $notify("", '', 'cookie更新成功')
     } $notify("", '', 'cookie无需要更新')
-
+    console.log($prefs.valueForKey(airportCookie))
     $done()
   }
   $done()
-  //重写后加done()网页才会继续打开
+
 }
