@@ -21,5 +21,10 @@
 //   $done()
 
 // }
-console.log($prefs.valueForKey(airportCookie))
-$done()
+try{
+ console.log($prefs.valueForKey(airportCookie))
+ $done()
+}
+catch(err){
+ console.log(err)
+ $done()
