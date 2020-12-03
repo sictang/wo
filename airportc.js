@@ -1,4 +1,4 @@
-if ($request.url.match(/\/setting\/logs/)) {
+if (typeof $request != "undefined") {
   const airportCookie = 'airportCookie'
   const nowcookie = $request.headers['Cookie']
   
