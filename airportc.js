@@ -1,2 +1,2 @@
-conlose.log($request.headers)
+console.log($request.headers)
 $done()
