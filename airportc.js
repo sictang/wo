@@ -23,6 +23,7 @@
 // }
 try{
  console.log($prefs.valueForKey(airportCookie))
+ console.log('没问题')
  $done()
 }
 catch(err){
