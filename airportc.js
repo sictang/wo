@@ -26,7 +26,7 @@ if (typeof $request != "undefined") {
   }
   $task.fetch(myRequest).then(response => {
     const body = response.body
-    console.log(body)
+    console.log(+body+)
   })
 $done()
 }
