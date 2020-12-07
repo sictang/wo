@@ -22,9 +22,9 @@ if (get(headerKey)) {
     set(theUrlKey, urlKey)
     set(theHeaderKey, headerKey)
     set(theBodyKey, bodyKey)
-    console.log(urlKey)
-    console.log(headerKey)
-    console.log(bodyKey)
+    
+    console.log(get(headerKey))
+    
     $notify("", '', 'cookie首次写入成功')
     $done()
 }
