@@ -12,7 +12,7 @@ if(typeof $request != "undefined"){
 }
 
 
-getCookie => {
+getCookie=()=> {
     if (get(headerKey)) {
         if (get(headerKey) != get(headerKey)) {
             set(theUrlKey, urlKey)
@@ -33,7 +33,7 @@ getCookie => {
     }
 }
 
-checkin => {
+checkin =()=> {
     const myContent = {
         method: 'POST',
         url: get(urlKey),
