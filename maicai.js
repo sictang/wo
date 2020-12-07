@@ -51,8 +51,5 @@ checkin =()=> {
 set = (key, val) => {
     return $prefs.setValueForKey(key, val)
 }
-get = (val) => {
-    return $prefs.valueForKey(val)
-}
-
+get = (val => $prefs.valueForKey(val))
 $done()
