@@ -4,6 +4,9 @@ const bodyKey = "bodyKey"
 const theUrlKey = $request.url
 const theHeaderKey = JSON.stringify($request.headers)
 const theBodyKey = $request.body
+set = (key, val) => {return $prefs.setValueForKey(key, val)}
+get = (val => $prefs.valueForKey(val))
+
 
 if(typeof $request != "undefined"){
     getCookie()
@@ -48,6 +51,5 @@ function checkin(){
     $done()
 }
 
-set = (key, val) => {return $prefs.setValueForKey(key, val)}
-get = val => {return $prefs.valueForKey(val)}
+
 $done()
