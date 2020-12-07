@@ -49,5 +49,5 @@ function checkin(){
 }
 
 set = (key, val) => {return $prefs.setValueForKey(key, val)}
-get = (val => $prefs.valueForKey(val))
+get = val => {return $prefs.valueForKey(val)}
 $done()
