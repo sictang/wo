@@ -1,17 +1,17 @@
-const urlkey = "urlkey"
+const urlKey = "urlKey"
 const headerKey = "headerKey"
 const bodyKey = "bodyKey"
 const theUrlKey = $request.url
 const theHeaderKey = $request.headers
-const thenBodyKey = $request.body
+const theBodyKey = $request.body
 const set = $prefs.setValueForKey
 const get = $prefs.valueForKey
 
 if (get(headerKey)) {
     if(get(headerKey) != get(headerKey)){
-        set(theUrlKey, urlkey)
+        set(theUrlKey, urlKey)
         set(theHeaderKey, headerKey)
-        set(thenBodyKey, bodyKey)
+        set(theBodyKey, bodyKey)
         $notify("", '', 'cookie更新成功')
         $done()
     }else{
@@ -19,9 +19,12 @@ if (get(headerKey)) {
         $done()
     }
 }else{
-    set(theUrlKey, urlkey)
+    set(theUrlKey, urlKey)
     set(theHeaderKey, headerKey)
-    set(thenBodyKey, bodyKey)
+    set(theBodyKey, bodyKey)
+    sonsole.log(urlKey)
+    sonsole.log(headerKey)
+    sonsole.log(bodyKey)
     $notify("", '', 'cookie首次写入成功')
     $done()
 }
