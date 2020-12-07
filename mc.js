@@ -4,8 +4,6 @@ const bodyKey = "bodyKey"
 const theUrlKey = $request.url
 const theHeaderKey = $request.headers
 const theBodyKey = $request.body
-const set = $prefs.setValueForKey
-const get = $prefs.valueForKey
 
 if (get(headerKey)) {
     if(get(headerKey) != get(headerKey)){
@@ -27,6 +25,13 @@ if (get(headerKey)) {
     
     $notify("", '', 'cookie首次写入成功')
     $done()
+}
+
+set=(key,val) =>{
+    return $prefs.setValueForKey(key, val)
+}
+get=(val) =>{
+    return $prefs.valueForKey(val)
 }
 
 $done()
