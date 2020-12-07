@@ -6,13 +6,9 @@ const theHeaderKey = JSON.stringify($request.headers)
 const theBodyKey = $request.body
 
 
-set=(key,val) =>{
-    return $prefs.setValueForKey(key, val)
+set=(key,val) =>{ return $prefs.setValueForKey(key, val)}
+get=(val=> $prefs.valueForKey(val))
 }
-get=(val) =>{
-    return $prefs.valueForKey(val)
-}
-
 
 if (get(headerKey)) {
     if(get(headerKey) != get(headerKey)){
@@ -22,19 +18,13 @@ if (get(headerKey)) {
         $notify("", '', 'cookie更新成功')
         $done()
     }else{
-        $notify("", '', 'cookie无需更新')
+        console.log('cookie无需更新')
         $done()
     }
 }else{
     set(theUrlKey, urlKey)
     set(theHeaderKey, headerKey)
-    set(theBodyKey, bodyKey)
-    
-    console.log(get(headerKey))
-    console.log(theHeaderKey)
-    console.log($request.headers)
-    console.log($request.url)
-    
+    set(theBodyKey, bodyKey)   
     $notify("", '', 'cookie首次写入成功')
     $done()
 }
