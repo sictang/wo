@@ -8,12 +8,13 @@ set = (key, val) => {return $prefs.setValueForKey(key, val)}
 get = (val => $prefs.valueForKey(val))
 
 
-if(typeof $request != "undefined"){
+try{
+    if(typeof $request != "undefined"){
     getCookie()
-}else{
+    }
+}catch{
     checkin()
 }
-
 
 function getCookie(){
     if (get(headerKey)) {
