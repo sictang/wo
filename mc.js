@@ -1,9 +1,9 @@
 const urlkey = "urlkey"
 const heanderKey = "heanderKey"
 const bodyKey = "bodyKey"
-const theUrlKey = $request.urlkey
+const theUrlKey = $request.url
 const theHeanderKey = $request.heanders
-const thenBodyKey = $request.bodyKey
+const thenBodyKey = $request.body
 const set = $prefs.setValueForKey
 const get = $prefs.valueForKey
 
