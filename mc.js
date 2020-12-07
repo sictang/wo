@@ -8,7 +8,6 @@ const theBodyKey = $request.body
 
 set=(key,val) =>{ return $prefs.setValueForKey(key, val)}
 get=(val=> $prefs.valueForKey(val))
-}
 
 if (get(headerKey)) {
     if(get(headerKey) != get(headerKey)){
