@@ -8,6 +8,7 @@ get=(val) =>{
 }
 
 const myContent = {
+    method: 'POST',
     url:get(urlKey),
     headers:JSON.parse(get(headerKey)),
     body:get(bodyKey)
