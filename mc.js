@@ -33,7 +33,7 @@ if (get(headerKey)) {
     console.log(get(headerKey))
     console.log(theHeaderKey)
     console.log($request.headers)
-    console.log($request.url）
+    console.log($request.url)
     
     $notify("", '', 'cookie首次写入成功')
     $done()
