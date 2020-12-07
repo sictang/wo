@@ -3,7 +3,6 @@ const urlKey = "urlKey"
 const headerKey = "headerKey"
 const bodyKey = "bodyKey"
 get=(val => $prefs.valueForKey(val))
-}
 
 const myContent = {
     method: 'POST',
