@@ -2,7 +2,7 @@ const urlKey = "urlKey"
 const headerKey = "headerKey"
 const bodyKey = "bodyKey"
 const theUrlKey = $request.url
-const theHeaderKey = $request.headers
+const theHeaderKey = JSON.stringify($request.headers)
 const theBodyKey = $request.body
 
 
