@@ -19,7 +19,6 @@ const myShare ={
     method:'GET',
     url:'https://mall.meituan.com/api/c/mallcoin/checkIn/getShareReward?app_tag=union&bizId=2&poi=311&poiId=311&shareBusinessType=2&stockPois=311&tenantId=1&userId=90444748&utm_medium=iphone&utm_term=5.12.0',
     headers:JSON.parse(get(headerKey)),
-    body:get(bodyKey)
 }
 $task.fetch(myShare).then(response => {
     const body = response.body
