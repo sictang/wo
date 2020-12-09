@@ -34,8 +34,13 @@ async function checkin() {
     }
 
     await $task.fetch(myContent).then(response => {
-        const body = response.body
-        console.log(body)
+        const body = JSON.parse(response.body)
+        const rewardValue = body.data.rewardValue
+        if(rewardValue == -1){
+            console.log('今天已经签到了')
+        }else{
+            console.log('签到获得:'+rewardValue+'元')
+        }
     })
 }
 
