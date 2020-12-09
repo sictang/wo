@@ -59,7 +59,7 @@ async function share() {
         const rewardValue = body.data.rewardValue
 
         if (body.data.result == false) {
-            console.log('今天已经签到了')
+            console.log('今天已经分享了')
         } else {
             console.log('签到获得:' + rewardValue + '元')
         }
@@ -98,7 +98,6 @@ async function taskList() {
     await $task.fetch(queryTaskListInfo).then(response => {
         const body = response.body
         userTaskId = 'userTaskId=' + body.match(/\"id\"\:(..)\,\"userTaskId\"\:(........)\,\"activityId\"\:(..)\,/)[2] + '&'
-        console.log(userTaskId)
         return userTaskId
     })
 
@@ -115,7 +114,7 @@ async function taskEventComplete() {
         headers: getheader
     }
     await $task.fetch(mytaskEventComplete).then(response => {
-       
+
     })
 }
 //领取奖励
@@ -129,11 +128,10 @@ async function takeTaskReward() {
     }
     $task.fetch(mytaketaskReward).then(response => {
         const body = JSON.parse(response.body)
-        try {
-            const rewardValue = body.data.rewardValue
+        const rewardValue = body.data.rewardValue
+        if (rewardValue) {
             console.log('任务获得:' + rewardValue + '元')
-            
-        }catch{
+        } else {
             console.log('你今天的任务已经完成了')
         }
     })
