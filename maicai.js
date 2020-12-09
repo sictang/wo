@@ -41,7 +41,7 @@ async function share(){
     const myshare = {
         method:'GET',
         url:shareUrl,
-        headers:myshare
+        headers:getheader
     }
     await $task.fetch(myshare).then(response=>{
         console.log(response.body)
