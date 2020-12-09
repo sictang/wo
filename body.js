@@ -1,2 +1,2 @@
-$request.body = '1'
+$request.body = ''
 $done($request.body)
