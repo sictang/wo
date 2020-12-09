@@ -43,8 +43,8 @@ async function share(){
         url:shareUrl,
         headers:myshare
     }
-    await $task.fetch(myshare).then(reponse=>{
-        console.log(reponse.body)
+    await $task.fetch(myshare).then(response=>{
+        console.log(response.body)
     })
 }
 
