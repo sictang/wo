@@ -1,11 +1,16 @@
 const urlKey = "urlKey"
 const headerKey = "headerKey"
 const bodyKey = "bodyKey"
-get = (val => $prefs.valueForKey(val))
 const header = JSON.parse(get(headerKey))
-let taskId, userTaskId, activityId, taskType, rewardId
+const taskId = 'taskId=52&'
+const activityId = 'activityId=33&'
+const taskType = 'taskType=6&'
+const rewardId ='rewardId=774&'
+let userTaskId
 const userId = 'userId=' + get(bodyKey).match(/\"userId\"\:\"([0-9]{6,10})\"\,/)[1] + '&'
 const paraments = userId + get(urlKey).match(/userCheckInNew\?(.+)/)[1]
+
+get = (val => $prefs.valueForKey(val))
 
 const getheader = {
     Host: header['Host'],
@@ -49,30 +54,9 @@ async function share(){
 }
 
 
-
-//获取任务ID
-async function taskList() {
-    await share()
-    const queryTaskListInfoUrl = 'https://mall.meituan.com/api/c/mallcoin/checkIn/queryTaskListInfoV2?channel=1&' + paraments
-    const queryTaskListInfo = {
-        method: 'GET',
-        url: queryTaskListInfoUrl,
-        headers: getheader
-    }
-    await $task.fetch(queryTaskListInfo).then(response => {
-        const body = response.body
-        taskId = 'taskId=' + body.match(/\"id\"\:(..)\,\"userTaskId\"\:(........)\,\"activityId\"\:(..)\,/)[1] + '&'
-        userTaskId = 'userTaskId=' + body.match(/\"id\"\:(..)\,\"userTaskId\"\:(........)\,\"activityId\"\:(..)\,/)[2] + '&'
-        activityId = 'activityId=' + body.match(/\"id\"\:(..)\,\"userTaskId\"\:(........)\,\"activityId\"\:(..)\,/)[3] + '&'
-        taskType = 'taskType=' + body.match(/\"taskType\"\:([0-9]{1,2})\,/)[1] + '&'
-        rewardId = 'rewardId=' + body.match(/\"rewardId\"\:([0-9]{3,5})\,/)[1] + '&'
-        return taskId, userTaskId, activityId, taskType, rewardId
-    })
-
-}
 //领取任务
 async function takeTask() {
-    await taskList()
+    await share()
     const takeTaskUrl = 'https://mall.meituan.com/api/c/mallcoin/checkIn/takeTask?channel=1&deviceId=&' + taskId + activityId + paraments
     const mytakeTask = {
         method: 'GET',
@@ -83,9 +67,29 @@ async function takeTask() {
         console.log(response.body)
     })
 }
+
+//获取任务ID
+async function taskList() {
+    await takeTask()
+    const queryTaskListInfoUrl = 'https://mall.meituan.com/api/c/mallcoin/checkIn/queryTaskListInfoV2?channel=1&' + paraments
+    const queryTaskListInfo = {
+        method: 'GET',
+        url: queryTaskListInfoUrl,
+        headers: getheader
+    }
+    await $task.fetch(queryTaskListInfo).then(response => {
+        const body = response.body
+        userTaskId = 'userTaskId=' + body.match(/\"id\"\:(..)\,\"userTaskId\"\:(........)\,\"activityId\"\:(..)\,/)[2] + '&' 
+        console.log(userTaskId)
+        return  userTaskId
+    })
+
+}
+
+
 //完成任务
 async function taskEventComplete() {
-    await takeTask()
+    await taskList()
     const taskEventCompleteUrl = 'https://mall.meituan.com/api/c/mallcoin/checkIn/taskEventComplete?channel=1&eventType=6&' + paraments
     const mytaskEventComplete = {
         method: 'GET',
@@ -109,5 +113,5 @@ async function takeTaskReward() {
         console.log(response.body)
     })
 }
+takeTaskReward()
 
- takeTaskReward()
