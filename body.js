@@ -1,3 +1,2 @@
-let body = $request.body
-body = "　"
-$done(body)
+let $request.body = " "
+$done($request.body)
