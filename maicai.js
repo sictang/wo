@@ -1,16 +1,16 @@
 const urlKey = "urlKey"
 const headerKey = "headerKey"
 const bodyKey = "bodyKey"
-const header = JSON.parse(get(headerKey))
 const taskId = 'taskId=52&'
 const activityId = 'activityId=33&'
 const taskType = 'taskType=6&'
 const rewardId ='rewardId=774&'
 let userTaskId
+get = (val => $prefs.valueForKey(val))
 const userId = 'userId=' + get(bodyKey).match(/\"userId\"\:\"([0-9]{6,10})\"\,/)[1] + '&'
 const paraments = userId + get(urlKey).match(/userCheckInNew\?(.+)/)[1]
+const header = JSON.parse(get(headerKey))
 
-get = (val => $prefs.valueForKey(val))
 
 const getheader = {
     Host: header['Host'],
