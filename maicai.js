@@ -110,4 +110,4 @@ async function takeTaskReward() {
     })
 }
 
-
+ takeTaskReward()
