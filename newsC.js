@@ -24,12 +24,12 @@ function read(val){
     return $prefs.valueForKey(val)
 }
 function notify(title,subtitle,text){
-    $notify(title,subtitle,text)
     if(subtitle == undefined){
         subtitle =''
         text = ''
     }else if(text == undefined){
         text = ''
     }
+     $notify(title,subtitle,text)
     $done()
 }
