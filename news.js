@@ -180,48 +180,64 @@ async function sign() {
 }
 
 async function reads() {
-    sign()
+    await sign()
     for (let i = 0; i < 10; i++) {
         await $task.fetch(readHeader).then(response => {
-            console.log(response.body)
+            if(i == 9){
+                console.log(response.body)
+            }
+            
         })
     }
 }
 
 async function posts() {
-    reads()
+    await reads()
     for (let i = 0; i < 10; i++) {
         await $task.fetch(postHeader).then(response => {
-            console.log(response.body)
+            if(i == 9){
+                console.log(response.body)
+            }
+            
         })
     }
 }
 
 async function like() {
-    posts()
+    await posts()
     for (let i = 0; i < 10; i++) {
         await $task.fetch(likeHeader).then(response => {
-            console.log(response.body)
+            if(i == 9){
+                console.log(response.body)
+            }
+            
         })
     }
 }
 
 async function video() {
-    like()
+    await like()
     for (let i = 0; i < 5; i++) {
         await $task.fetch(videoHeader).then(response => {
-            console.log(response.body)
+            if(i == 4){
+                console.log(response.body)
+            }
+            
         })
     }
 }
 
 async function share() {
-    video()
+    await video()
     for (let i = 0; i < 10; i++) {
         await $task.fetch(shareHeader).then(response => {
-            console.log(response.body)
+            if(i == 9){
+                console.log(response.body)
+            }
+            
         })
     }
+    notify('网易新闻任务完成')
 }
 share()
 
@@ -241,3 +257,4 @@ function notify(title, subtitle, text) {
     $notify(title, subtitle, text)
     $done()
 }
+
