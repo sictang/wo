@@ -181,7 +181,7 @@ async function sign() {
 
 async function reads() {
     sign()
-    for (let i = o; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
         await $task.fetch(readHeader).then(response => {
             console.log(response.body)
         })
@@ -190,7 +190,7 @@ async function reads() {
 
 async function posts() {
     reads()
-    for (let i = o; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
         await $task.fetch(postHeader).then(response => {
             console.log(response.body)
         })
@@ -199,7 +199,7 @@ async function posts() {
 
 async function like() {
     posts()
-    for (let i = o; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
         await $task.fetch(likeHeader).then(response => {
             console.log(response.body)
         })
@@ -217,7 +217,7 @@ async function video() {
 
 async function share() {
     video()
-    for (let i = o; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
         await $task.fetch(shareHeader).then(response => {
             console.log(response.body)
         })
