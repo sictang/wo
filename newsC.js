@@ -1,6 +1,8 @@
 const newsCookie = 'newsCookie'
 const theHeader = $request.headers
 const userU = theHeader['User-U']
+console.log(theHeader)
+console.log(userU)
 
 if(read(newsCookie)){
     if(!read(newsCookie)){
