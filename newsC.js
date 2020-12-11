@@ -1,9 +1,10 @@
 const newsCookie = 'newsCookie'
 const theHeader = $request.headers
+const userU = theHeader['User-U']
 
 if(read(newsCookie)){
     if(!read(newsCookie)){
-        const userU = theHeader['User-U']
+        
         write(userU,newsCookie)
         console.log('cookie更新成功')
         notify('cookie更新成功')
@@ -13,7 +14,7 @@ if(read(newsCookie)){
     }
 
 }else{
-    write(theHeader,newsHeader)
+    write(userU,newsCookie)
     console.log('首次写入cookie成功')
     notify('首次写入cookie成功')
 }
