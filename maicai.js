@@ -5,14 +5,10 @@ const taskId = 'taskId=52&'
 const activityId = 'activityId=33&'
 const taskType = 'taskType=6&'
 const rewardId = 'rewardId=774&'
-let userTaskId
-
-get = (val => $prefs.valueForKey(val))
-const userId = 'userId=' + get(bodyKey).match(/\"userId\"\:\"([0-9]{6,10})\"\,/)[1] + '&'
-const paraments = userId + get(urlKey).match(/userCheckInNew\?(.+)/)[1]
-const header = JSON.parse(get(headerKey))
-
-
+let userTaskId,checkinReward=0,shareReward=0,taskReward=0
+const userId = 'userId=' + read(bodyKey).match(/\"userId\"\:\"([0-9]{6,10})\"\,/)[1] + '&'
+const paraments = userId + read(urlKey).match(/userCheckInNew\?(.+)/)[1]
+const header = JSON.parse(read(headerKey))
 const getheader = {
     Host: header['Host'],
     t: header['t'],
@@ -29,18 +25,20 @@ const getheader = {
 async function checkin() {
     const myContent = {
         method: 'POST',
-        url: get(urlKey),
+        url: read(urlKey),
         headers: header,
-        body: get(bodyKey)
+        body: read(bodyKey)
     }
 
     await $task.fetch(myContent).then(response => {
         const body = JSON.parse(response.body)
-        const rewardValue = body.data.rewardValue
-        if (rewardValue == -1) {
-            console.log('今天已经签到了')
+        const result = body.data.result
+        const checkinReward = body.data.rewardValue
+        if (result) {
+            console.log('签到获得:' + checkinReward + '元')
+            return checkinReward
         } else {
-            console.log('签到获得:' + rewardValue + '元')
+            console.log('今天已经签到了')
         }
     })
 }
@@ -56,12 +54,13 @@ async function share() {
     }
     await $task.fetch(myshare).then(response => {
         const body = JSON.parse(response.body)
-        const rewardValue = body.data.rewardValue
-
-        if (body.data.result == false) {
-            console.log('今天已经分享了')
+        const shareReward = body.data.rewardValue
+        const result = body.data.result
+        if (result) {          
+            console.log('签到获得:' + shareReward + '元')
+            return shareReward
         } else {
-            console.log('签到获得:' + rewardValue + '元')
+            console.log('今天已经分享了')
         }
     })
 }
@@ -126,16 +125,37 @@ async function takeTaskReward() {
         url: takeTaskRewardUrl,
         headers: getheader
     }
-    $task.fetch(mytaketaskReward).then(response => {
+    await $task.fetch(mytaketaskReward).then(response => {
         const body = JSON.parse(response.body)
-        const rewardValue = body.data.rewardValue
-        if (rewardValue) {
-            console.log('任务获得:' + rewardValue + '元')
+        const taskReward = body.data.rewardValue
+        if (takeRewar) {
+            console.log('任务获得:' + taskReward + '元')
+            return taskReward
         } else {
             console.log('你今天的任务已经完成了')
         }
     })
 }
 
-
-takeTaskReward()
+async function statisticsReward(){
+    await takeTaskReward()
+    const statistics = checkinReward + shareReward + taskReward
+    notify('美团买菜','今天总共获得'+statistics+'元')
+}
+statisticsReward()
+function write(key, val) {
+    return $prefs.setValueForKey(key, val)
+}
+function read(val) {
+    return $prefs.valueForKey(val)
+}
+function notify(title, subtitle, text) {
+    if (subtitle == undefined) {
+        subtitle = ''
+        text = ''
+    } else if (text == undefined) {
+        text = ''
+    }
+    $notify(title, subtitle, text)
+    $done()
+}
