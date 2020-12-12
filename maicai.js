@@ -128,7 +128,7 @@ async function takeTaskReward() {
     await $task.fetch(mytaketaskReward).then(response => {
         const body = JSON.parse(response.body)
         const taskReward = body.data.rewardValue
-        if (takeRewar) {
+        if (taskReward) {
             console.log('任务获得:' + taskReward + '元')
             return taskReward
         } else {
