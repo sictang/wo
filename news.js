@@ -29,7 +29,6 @@ const signHeader = {
 }
 
 //阅读
-
 const readHeader = {
     method: 'POST',
     url: 'https://b-gw.m.163.com/commons-user-incentive/api/v1/commons/incentive/doAction',
@@ -113,7 +112,6 @@ const postHeader = {
     body: 'targetId=FTAH8M7N0520LLJ4_246981833&targetType=comment&taskId=10002'
 }
 
-
 //点赞
 const likeHeader = {
     method: 'POST',
@@ -142,10 +140,7 @@ const likeHeader = {
     body: 'targetId=FTAJ5DAV0519AQ5J_246746324&targetType=comment&taskId=20006'
 }
 
-
-
 //分享
-
 const shareHeader = {
     method: 'POST',
     url: "https://b-gw.m.163.com/commons-user-incentive/api/v1/commons/incentive/doAction",
@@ -231,13 +226,20 @@ async function share() {
     await video()
     for (let i = 0; i < 10; i++) {
         await $task.fetch(shareHeader).then(response => {
-            if(i == 9){
+            if(i == 9 && response.body.indexOf('分享完成') != -1){
                 console.log(response.body)
+                notify('网易新闻任务完成')
+            }else if(i == 9 && response.body.indexOf('完成' != -1){
+                console.log(response.body)
+                notify('网易新闻任务重复完成')
+            }else{
+                console.log(response.body)
+                notify('网易新闻任务失败，请查看日志')
             }
             
         })
     }
-    notify('网易新闻任务完成')
+    
 }
 share()
 
@@ -257,4 +259,3 @@ function notify(title, subtitle, text) {
     $notify(title, subtitle, text)
     $done()
 }
-
