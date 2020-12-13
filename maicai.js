@@ -33,13 +33,19 @@ async function checkin() {
         const body = JSON.parse(response.body)
         const result = body.data.result
         checkinReward = body.data.rewardValue
-        if (result) {
-            console.log('签到获得:' + checkinReward + '元')
-            return checkinReward
-        } else {
-            console.log('今天已经签到了')
-            return checkinReward = 0
+        if(body.indexOf('请重新登录' != -1)){
+            console.log(body)
+            notify('cookie可能已经失效，请查看日志')
+        }else{
+            if (result) {
+                console.log('签到获得:' + checkinReward + '元')
+                return checkinReward
+            } else {
+                console.log('今天已经签到了')
+                return checkinReward = 0
+            }
         }
+
     })
 }
 
@@ -53,9 +59,9 @@ async function share() {
         headers: getheader
     }
     await $task.fetch(myshare).then(response => {
-        const body = JSON.parse(response.body)
-        shareReward = body.data.rewardValue
+        const body = JSON.parse(response.body)        
         const result = body.data.result
+        shareReward = body.data.rewardValue
         if (result) {          
             console.log('签到获得:' + shareReward + '元')
             return shareReward
@@ -100,9 +106,7 @@ async function taskList() {
         userTaskId = 'userTaskId=' + body.match(/\"id\"\:(..)\,\"userTaskId\"\:(........)\,\"activityId\"\:(..)\,/)[2] + '&'
         return userTaskId
     })
-
 }
-
 
 //完成任务
 async function taskEventComplete() {
