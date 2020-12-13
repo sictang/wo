@@ -226,7 +226,7 @@ async function share() {
     await video()
     for (let i = 0; i < 10; i++) {
         await $task.fetch(shareHeader).then(response => {
-            if(i == 9 && response.body.indexOf('分享完成') != -1){
+            if(i == 9 && response.body.indexOf('分享成功') != -1){
                 console.log(response.body)
                 notify('网易新闻任务完成')
             }else if(i == 9 && response.body.indexOf('成功') != -1){
