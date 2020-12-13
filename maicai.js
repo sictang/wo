@@ -32,7 +32,7 @@ async function checkin() {
     await $task.fetch(myContent).then(response => {
         const body = JSON.parse(response.body)
         const result = body.data.result
-        const checkinReward = body.data.rewardValue
+        checkinReward = body.data.rewardValue
         if (result) {
             console.log('签到获得:' + checkinReward + '元')
             return checkinReward
@@ -53,7 +53,7 @@ async function share() {
     }
     await $task.fetch(myshare).then(response => {
         const body = JSON.parse(response.body)
-        const shareReward = body.data.rewardValue
+        shareReward = body.data.rewardValue
         const result = body.data.result
         if (result) {          
             console.log('签到获得:' + shareReward + '元')
@@ -126,7 +126,7 @@ async function takeTaskReward() {
     }
     await $task.fetch(mytaketaskReward).then(response => {
         const body = JSON.parse(response.body)
-        const taskReward = body.data.rewardValue
+        taskReward = body.data.rewardValue
         if (taskReward) {
             console.log('任务获得:' + taskReward + '元')
             return taskReward
