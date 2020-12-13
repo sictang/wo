@@ -229,10 +229,10 @@ async function share() {
             if(i == 9 && response.body.indexOf('分享完成') != -1){
                 console.log(response.body)
                 notify('网易新闻任务完成')
-            }else if(i == 9 && response.body.indexOf('完成' != -1){
+            }else if(i == 9 && response.body.indexOf('成功') != -1){
                 console.log(response.body)
                 notify('网易新闻任务重复完成')
-            }else{
+            }else if(i == 9){
                 console.log(response.body)
                 notify('网易新闻任务失败，请查看日志')
             }
