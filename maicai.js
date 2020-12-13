@@ -33,8 +33,8 @@ async function checkin() {
         const body = JSON.parse(response.body)
         const result = body.data.result
         checkinReward = body.data.rewardValue
-        if(body.indexOf('请重新登录') != -1){
-            console.log(body)
+        if(response.body.indexOf('请重新登录') != -1){
+            console.log(response.body)
             notify('cookie可能已经失效，请查看日志')
         }else{
             if (result) {
