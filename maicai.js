@@ -5,7 +5,7 @@ const taskId = 'taskId=52&'
 const activityId = 'activityId=33&'
 const taskType = 'taskType=6&'
 const rewardId = 'rewardId=774&'
-let userTaskId,checkinReward=0,shareReward=0,taskReward=0
+let userTaskId,checkinReward,shareReward,taskReward
 const userId = 'userId=' + read(bodyKey).match(/\"userId\"\:\"([0-9]{6,10})\"\,/)[1] + '&'
 const paraments = userId + read(urlKey).match(/userCheckInNew\?(.+)/)[1]
 const header = JSON.parse(read(headerKey))
@@ -38,6 +38,7 @@ async function checkin() {
             return checkinReward
         } else {
             console.log('今天已经签到了')
+            return checkinReward = 0
         }
     })
 }
@@ -60,6 +61,7 @@ async function share() {
             return shareReward
         } else {
             console.log('今天已经分享了')
+            return shareReward = 0
         }
     })
 }
@@ -132,6 +134,7 @@ async function takeTaskReward() {
             return taskReward
         } else {
             console.log('你今天的任务已经完成了')
+            return taskReward = 0
         }
     })
 }
