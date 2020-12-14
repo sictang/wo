@@ -32,7 +32,7 @@ async function checkin() {
     await $task.fetch(myContent).then(response => {
         const body = JSON.parse(response.body)
         const result = body.data.result
-        checkinReward = body.data.rewardValue
+        checkinReward = body.data.rewardValue *1
         if(response.body.indexOf('请重新登录') != -1){
             console.log(response.body)
             notify('cookie可能已经失效，请查看日志')
@@ -61,7 +61,7 @@ async function share() {
     await $task.fetch(myshare).then(response => {
         const body = JSON.parse(response.body)        
         const result = body.data.result
-        shareReward = body.data.rewardValue
+        shareReward = body.data.rewardValue *1
         if (result) {          
             console.log('签到获得:' + shareReward + '元')
             return shareReward
@@ -132,7 +132,7 @@ async function takeTaskReward() {
     }
     await $task.fetch(mytaketaskReward).then(response => {
         const body = JSON.parse(response.body)
-        taskReward = body.data.rewardValue
+        taskReward = body.data.rewardValue *1
         if (taskReward) {
             console.log('任务获得:' + taskReward + '元')
             return taskReward
