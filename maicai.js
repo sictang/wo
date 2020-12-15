@@ -51,6 +51,7 @@ async function checkin() {
 
 //分享
 async function share() {
+    if(checkinReward === 0){return shareReward = 0}
     await checkin()
     const shareUrl = 'https://mall.meituan.com/api/c/mallcoin/checkIn/getShareReward?shareBusinessType=2&' + paraments
     const myshare = {
