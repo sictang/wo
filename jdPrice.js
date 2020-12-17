@@ -1,3 +1,4 @@
+
 const wareId = 'wareId'
 const wareIdArr = []
 let text = ''
@@ -21,12 +22,12 @@ function addFavorite() {
         if (num === -1) {
             newWareIdArr.push(addWareId)
             write(JSON.stringify(newWareIdArr), wareId)
-            console.log('收藏商品成功')
+            notify('关注成功')
         }
     } else {
         wareIdArr.push(addWareId)
         write(JSON.stringify(wareIdArr), wareId)
-        console.log('首次收藏成功')
+        notify('首次关注成功')
     }
     getName(addWareId)
 }
@@ -42,7 +43,7 @@ function cancelFavorite() {
         }
         clean(cancelId)
         write(JSON.stringify(newWareIdArr), wareId)
-        console.log('删除ID成功')
+        notify('取消关注')
     }
     $done()
 }
@@ -102,14 +103,10 @@ async function getPrice(url) {
         let buyArr = []
         let textArr = []
         let buy, discount
-        console.log('原价：' + originalPrice)
-        console.log('现价：' + currentPrice)
-        console.log(name)
         textArr.push('原价：' + originalPrice)
         textArr.push('现价：' + currentPrice)
 
-        for (let i = 0; i < gift.length; i++) {
-            console.log('赠品：' + gift[i].value)
+        for (let i = 0; i < gift.length; i++) {            
             textArr.push('赠品：' + gift[i].value)
         }
         for (let i = 0; i < acitvity.length; i++) {
@@ -117,7 +114,6 @@ async function getPrice(url) {
             if (acitvity[i].value.indexOf('享受单件价') === -1) {
                 if (acitvity[i].value.indexOf('换购') === -1) {
                     if (acitvity[i].value.indexOf('返券包') === -1) {
-                        console.log('促销：' + acitvity[i].value)
                         textArr.push('促销：' + acitvity[i].value)
                         buyArr = acitvity[i].value.match(/满(.+?)件/g)
                         const discountArr = acitvity[i].value.match(/打(.+?)折/g)
@@ -126,7 +122,6 @@ async function getPrice(url) {
                             discount = discountArr[i].match(/打(.+?)折/)[1] * 0.1
                             disPrice = (currentPrice * buy) * discount / buy
                             disPrice = disPrice.toFixed(2)
-                            console.log('满减：' + buy + '件：' + disPrice + '，总价：' + buy * disPrice)
                             textArr.push('满减：' + buy + '件：' + disPrice + '，总价：' + buy * disPrice)
                         }
 
@@ -140,20 +135,17 @@ async function getPrice(url) {
         for (let i = 0; i < couponInfo.length; i++) {
             const full = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[1] * 1
             const reduce = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[2] * 1
-            console.log('优惠券：' + couponInfo[i].discountText)
             textArr.push('优惠券：' + couponInfo[i].discountText)
             for (let i = 1; i < 12; i++) {
                 if (full <= currentPrice * i) {
                     let unitPrice = (currentPrice * i - reduce) / i
                     unitPrice = unitPrice.toFixed(2)
-                    console.log('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice)
                     textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice)
                     if (buyArr) {
                         for (let i = buy; i < 12; i++) {
                             if (full <= currentPrice * i) {
                                 let unitPrice = ((currentPrice * i) * discount - reduce) / i
                                 unitPrice = unitPrice.toFixed(2)
-                                console.log('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice)
                                 textArr.push('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice)
                                 break
                             }
