@@ -1,0 +1,193 @@
+const wareId = 'wareId'
+const wareIdArr = []
+let text = ''
+if ($request) {
+    if ($request.url.match('addFavorite')) {
+        addFavorite()
+    } else if ($request.url.match('cancelFavorite')) {
+        cancelFavorite()
+    }
+} else {
+    main()
+}
+
+
+//关注商品时保存ID
+function addFavorite() {
+    const addWareId = $request.body.match(/wareId%22%3A%22(.+?)%/)[1]
+    if (read(wareId)) {
+        const newWareIdArr = JSON.parse(read(wareId))
+        const num = newWareIdArr.indexOf(addWareId)
+        if (num === -1) {
+            newWareIdArr.push(addWareId)
+            write(JSON.stringify(newWareIdArr), wareId)
+            console.log('收藏商品成功')
+        }
+    } else {
+        wareIdArr.push(addWareId)
+        write(JSON.stringify(wareIdArr), wareId)
+        console.log('首次收藏成功')
+    }
+    getName(addWareId)
+}
+
+//取消关注时删除ID
+function cancelFavorite() {
+    if (read(wareId)) {
+        const cancelId = $request.body.match(/wareId%22%3A%22(.+?)%/)[1]
+        const newWareIdArr = JSON.parse(read(wareId))
+        const num = newWareIdArr.indexOf(cancelId)
+        if (num != -1) {
+            newWareIdArr.splice(num, 1)
+        }
+        clean(cancelId)
+        write(JSON.stringify(newWareIdArr), wareId)
+        console.log('删除ID成功')
+    }
+    $done()
+}
+
+//获取商品名称
+async function getName(val) {
+    const getNameArr = {
+        method: 'get',
+        url: 'https://diviner.jd.com/diviner?lid=19&ec=utf-8&p=902029&sku=' + val,
+        headers: {
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'accept-encoding': 'gzip, deflate, br',
+            'accept-language': 'zh-CN,zh;q=0.9',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+        }
+    }
+    await $task.fetch(getNameArr).then(response => {
+        const body = JSON.parse(response.body)
+        const name = body.data[0].t
+        write(name, val)
+        $done()
+    })
+}
+
+
+//主要
+async function main() {
+    const product = JSON.parse(read(wareId))
+    for (let i = 0; i < product.length; i++) {
+        const name = read(product[i])
+        text += '-----------------------------\n'
+        text += name + '\n'
+        const price = {
+            method: 'get',
+            url: 'https://item-soa.jd.com/getWareBusiness?skuId=' + product[i],
+            headers: {
+                'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                'accept-encoding': 'gzip, deflate, br',
+                'accept-language': 'zh-CN,zh;q=0.9',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+            }
+        }
+        await getPrice(price)
+    }
+    notify('', '', text)
+    $done()
+}
+
+async function getPrice(url) {
+    await $task.fetch(url).then(response => {
+        const body = JSON.parse(response.body)
+        const acitvity = body.promotion.activity
+        const gift = body.promotion.gift
+        const couponInfo = body.couponInfo
+        const currentPrice = body.price.p * 1
+        const originalPrice = body.price.op * 1
+        let buyArr = []
+        let textArr = []
+        let buy, discount
+        console.log('原价：' + originalPrice)
+        console.log('现价：' + currentPrice)
+        console.log(name)
+        textArr.push('原价：' + originalPrice)
+        textArr.push('现价：' + currentPrice)
+
+        for (let i = 0; i < gift.length; i++) {
+            console.log('赠品：' + gift[i].value)
+            textArr.push('赠品：' + gift[i].value)
+        }
+        for (let i = 0; i < acitvity.length; i++) {
+
+            if (acitvity[i].value.indexOf('享受单件价') === -1) {
+                if (acitvity[i].value.indexOf('换购') === -1) {
+                    if (acitvity[i].value.indexOf('返券包') === -1) {
+                        console.log('促销：' + acitvity[i].value)
+                        textArr.push('促销：' + acitvity[i].value)
+                        buyArr = acitvity[i].value.match(/满(.+?)件/g)
+                        const discountArr = acitvity[i].value.match(/打(.+?)折/g)
+                        for (let i = 0; i < buyArr.length; i++) {
+                            buy = buyArr[i].match(/满(.+?)件/)[1]
+                            discount = discountArr[i].match(/打(.+?)折/)[1] * 0.1
+                            disPrice = (currentPrice * buy) * discount / buy
+                            disPrice = disPrice.toFixed(2)
+                            console.log('满减：' + buy + '件：' + disPrice + '，总价：' + buy * disPrice)
+                            textArr.push('满减：' + buy + '件：' + disPrice + '，总价：' + buy * disPrice)
+                        }
+
+
+
+                    }
+                }
+            }
+
+        }
+        for (let i = 0; i < couponInfo.length; i++) {
+            const full = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[1] * 1
+            const reduce = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[2] * 1
+            console.log('优惠券：' + couponInfo[i].discountText)
+            textArr.push('优惠券：' + couponInfo[i].discountText)
+            for (let i = 1; i < 12; i++) {
+                if (full <= currentPrice * i) {
+                    let unitPrice = (currentPrice * i - reduce) / i
+                    unitPrice = unitPrice.toFixed(2)
+                    console.log('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice)
+                    textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice)
+                    if (buyArr) {
+                        for (let i = buy; i < 12; i++) {
+                            if (full <= currentPrice * i) {
+                                let unitPrice = ((currentPrice * i) * discount - reduce) / i
+                                unitPrice = unitPrice.toFixed(2)
+                                console.log('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice)
+                                textArr.push('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice)
+                                break
+                            }
+                        }
+
+                    }
+                    break
+                }
+            }
+        }
+        for (let i = 0; i < textArr.length; i++) {
+            text += textArr[i] + '\n'
+        }
+        return text
+    })
+}
+
+
+
+function write(key, val) {
+    return $prefs.setValueForKey(key, val)
+}
+function read(val) {
+    return $prefs.valueForKey(val)
+}
+function clean(val) {
+    return $prefs.removeValueForKey(val)
+}
+function notify(title, subtitle, text) {
+    if (subtitle == undefined) {
+        subtitle = ''
+        text = ''
+    } else if (text == undefined) {
+        text = ''
+    }
+    $notify(title, subtitle, text)
+}
