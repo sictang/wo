@@ -131,7 +131,7 @@ async function getPrice(url) {
                                 if (fullErro <= currentPrice * i){
                                     newPrice = (currentPrice * i - reduction) / i
                                     newPrice = newPrice.toFixed(2)
-                                    text.push('促销：' + i + '件：' + newPrice + '，总价：' + newPrice * i)
+                                    textArr.push('促销：' + i + '件：' + newPrice + '，总价：' + newPrice * i)
                                     break
                                 }
                             }
