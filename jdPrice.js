@@ -104,18 +104,18 @@ async function getPrice(url) {
         const buyArr = []
         
         let buy, discount, newPrice
-        textArr.push('原价：' + originalPrice)
-        textArr.push('现价：' + currentPrice)
+        textArr.push('原价：' + originalPrice + '\n')
+        textArr.push('现价：' + currentPrice + '\n')
 
         for (let i = 0; i < gift.length; i++) {
-            textArr.push('赠品：' + gift[i].value)
+            textArr.push('赠品：' + gift[i].value + '\n')
         }
         for (let i = 0; i < acitvity.length; i++) {
 
             if (acitvity[i].value.indexOf('享受单件价') === -1) {
                 if (acitvity[i].value.indexOf('换购') === -1) {
                     if (acitvity[i].value.indexOf('返券包') === -1) {
-                        textArr.push('促销：' + acitvity[i].value)
+                        textArr.push('促销：' + acitvity[i].value + '\n')
                         buyArr = acitvity[i].value.match(/满(.+?)件/g)
                         const discountArr = acitvity[i].value.match(/打(.+?)折/g)
                         const fullErro = acitvity[i].value.match(/满(.+?)元减(.+?)元/)[1]
@@ -126,14 +126,14 @@ async function getPrice(url) {
                                 discount = discountArr[i].match(/打(.+?)折/)[1] * 0.1
                                 disPrice = (currentPrice * buy) * discount / buy
                                 disPrice = disPrice.toFixed(2)
-                                textArr.push('满减：' + buy + '件：' + disPrice + '，总价：' + buy * disPrice)
+                                textArr.push('满减：' + buy + '件：' + disPrice + '，总价：' + buy * disPrice + '\n')
                             }
                         } else if (fullErro) {
                             for (let i = 1; i < 12; i++) {
                                 if (fullErro <= currentPrice * i) {
                                     newPrice = (currentPrice * i - reduction) / i
                                     newPrice = newPrice.toFixed(2)
-                                    textArr.push('促销：' + i + '件：' + newPrice + '，总价：' + newPrice * i)
+                                    textArr.push('促销：' + i + '件：' + newPrice + '，总价：' + newPrice * i + '\n')
                                     break
                                 }
                             }
@@ -147,18 +147,18 @@ async function getPrice(url) {
         for (let i = 0; i < couponInfo.length; i++) {
             const full = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[1] * 1
             const reduce = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[2] * 1
-            textArr.push('优惠券：' + couponInfo[i].discountText)
+            textArr.push('优惠券：' + couponInfo[i].discountText + '\n')
             for (let i = 1; i < 12; i++) {
                 if (full <= currentPrice * i) {
                     let unitPrice = (currentPrice * i - reduce) / i
                     unitPrice = unitPrice.toFixed(2)
-                    textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice)
+                    textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice + '\n')
                     if (buyArr) {
                         for (let i = buy; i < 12; i++) {
                             if (full <= currentPrice * i) {
                                 let unitPrice = ((currentPrice * i) * discount - reduce) / i
                                 unitPrice = unitPrice.toFixed(2)
-                                textArr.push('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice)
+                                textArr.push('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice +'\n')
                                 break
                             }
                         }
@@ -189,14 +189,14 @@ async function getLowerPrice(num) {
         if (listLower) {
             for (let i = 0; i < listLower.length; i++) {
                 if (listLower[i].days === 0) {
-                    textArr.push('最低价：' + listLower[i].lowerPrice)
+                    textArr.push('最低价：' + listLower[i].lowerPrice +'，')
                 } else {
-                    textArr.push(listLower[i].days + '天：' + listLower[i].lowerPrice)
+                    textArr.push(listLower[i].days + '天：' + listLower[i].lowerPrice+'，')
                 }
             }
         }
         for (let i = 0; i < textArr.length; i++) {
-            text += textArr[i] + '\n'
+            text += textArr[i]
         }
         return text
     }).catch(erro => {
