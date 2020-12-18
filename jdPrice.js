@@ -1,7 +1,8 @@
 const wareId = 'wareId'
 const wareIdArr = []
+const textArr = []
 let text = ''
-if (typeof $request != undefined) {
+if ($request) {
     if ($request.url.match('addFavorite')) {
         addFavorite()
     } else if ($request.url.match('cancelFavorite')) {
@@ -100,8 +101,8 @@ async function getPrice(url) {
         const couponInfo = body.couponInfo
         const currentPrice = body.price.p * 1
         const originalPrice = body.price.op * 1
-        let buyArr = []
-        let textArr = []
+        const buyArr = []
+        
         let buy, discount, newPrice
         textArr.push('原价：' + originalPrice)
         textArr.push('现价：' + currentPrice)
@@ -167,10 +168,6 @@ async function getPrice(url) {
                 }
             }
         }
-        for (let i = 0; i < textArr.length; i++) {
-            text += textArr[i] + '\n'
-        }
-        return text
     }).catch(erro => {
         console.log(erro)
     })
@@ -192,12 +189,16 @@ async function getLowerPrice(num) {
         if (listLower) {
             for (let i = 0; i < listLower.length; i++) {
                 if (listLower[i].days === 0) {
-                    textArr.push('历史最低价：' + listLower[i].lowerPrice)
+                    textArr.push('最低价：' + listLower[i].lowerPrice)
                 } else {
-                    textarr.push(listLower[i].days + '天' + listLower[i].lowerPrice)
+                    textArr.push(listLower[i].days + '天：' + listLower[i].lowerPrice)
                 }
             }
         }
+        for (let i = 0; i < textArr.length; i++) {
+            text += textArr[i] + '\n'
+        }
+        return text
     }).catch(erro => {
         console.log(erro)
     })
@@ -223,4 +224,3 @@ function notify(title, subtitle, text) {
     }
     $notify(title, subtitle, text)
 }
-
