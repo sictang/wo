@@ -2,7 +2,7 @@ const wareId = 'wareId'
 const wareIdArr = []
 const textArr = []
 let text = ''
-if ($request) {
+if (typeof $request != 'undefined') {
     if ($request.url.match('addFavorite')) {
         addFavorite()
     } else if ($request.url.match('cancelFavorite')) {
