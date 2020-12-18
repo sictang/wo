@@ -1,6 +1,6 @@
 const wareId = 'wareId'
 const wareIdArr = []
-const textArr = []
+let textArr = []
 let text = ''
 if (typeof $request != 'undefined') {
     if ($request.url.match('addFavorite')) {
@@ -74,6 +74,7 @@ async function main() {
     const product = JSON.parse(read(wareId))
     for (let i = 0; i < product.length; i++) {
         const name = read(product[i])
+        textArr = []
         text += '-----------------------------\n'
         text += name + '\n'
         const price = {
@@ -190,7 +191,9 @@ async function getLowerPrice(num) {
             for (let i = 0; i < listLower.length; i++) {
                 if (listLower[i].days === 0) {
                     textArr.push('最低价：' + listLower[i].lowerPrice +'，')
-                } else {
+                }else if(listLower[i].days === 30) {
+                    textArr.push(listLower[i].days + '天：' + listLower[i].lowerPrice+'\n')
+                }else {
                     textArr.push(listLower[i].days + '天：' + listLower[i].lowerPrice+'，')
                 }
             }
