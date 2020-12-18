@@ -146,7 +146,8 @@ async function takeTaskReward() {
 
 async function statisticsReward(){
     await takeTaskReward()
-    const statistics = checkinReward + shareReward + taskReward
+    let statistics = checkinReward + shareReward + taskReward
+    statistics = statistics.toFixed(2)
     console.log('今天获得'+statistics+'元')
     if(statistics != 0){
     notify('美团买菜','今天总共获得'+statistics+'元')
