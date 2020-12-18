@@ -102,7 +102,7 @@ async function getPrice(url) {
         const couponInfo = body.couponInfo
         const currentPrice = body.price.p * 1
         const originalPrice = body.price.op * 1
-        const buyArr = []
+        let buyArr = []
         
         let buy, discount, newPrice
         textArr.push('原价：' + originalPrice + '\n')
