@@ -86,6 +86,7 @@ async function main() {
             }
         }
         await getPrice(price)
+        await getLowerPrice(product[i])
     }
     notify('', '', text)
     $done()
@@ -128,7 +129,7 @@ async function getPrice(url) {
                             }
                         } else if (fullErro) {
                             for (let i = 1; i < 12; i++) {
-                                if (fullErro <= currentPrice * i){
+                                if (fullErro <= currentPrice * i) {
                                     newPrice = (currentPrice * i - reduction) / i
                                     newPrice = newPrice.toFixed(2)
                                     textArr.push('促销：' + i + '件：' + newPrice + '，总价：' + newPrice * i)
@@ -170,7 +171,34 @@ async function getPrice(url) {
             text += textArr[i] + '\n'
         }
         return text
-    }).catch(erro =>{
+    }).catch(erro => {
+        console.log(erro)
+    })
+}
+
+async function getLowerPrice(num) {
+    const lowerPriceTable = {
+        method: 'post',
+        url: 'https://apapia-history.manmanbuy.com/ChromeWidgetServices/WidgetServices.ashx',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+            'User-Agent': "Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 - mmbWebBrowse - ios"
+        },
+        body: "methodName=getHistoryTrend&p_url=" + encodeURIComponent('https://item.jd.com/' + num + '.html')
+    }
+    await $task.fetch(lowerPriceTable).then(response => {
+        const body = response.body
+        const listLower = body.single.listLower
+        if (listLower) {
+            for (let i = 0; i < listLower.length; i++) {
+                if (listLower[i].days === 0) {
+                    textArr.push('历史最低价：' + listLower[i].lowerPrice)
+                } else {
+                    textarr.push(listLower[i].days + '天' + listLower[i].lowerPrice)
+                }
+            }
+        }
+    }).catch(erro => {
         console.log(erro)
     })
 }
@@ -195,3 +223,4 @@ function notify(title, subtitle, text) {
     }
     $notify(title, subtitle, text)
 }
+
