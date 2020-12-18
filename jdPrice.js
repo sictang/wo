@@ -1,7 +1,7 @@
 const wareId = 'wareId'
 const wareIdArr = []
 let text = ''
-if ($request) {
+if (typeof $request != undefined) {
     if ($request.url.match('addFavorite')) {
         addFavorite()
     } else if ($request.url.match('cancelFavorite')) {
@@ -187,7 +187,7 @@ async function getLowerPrice(num) {
         body: "methodName=getHistoryTrend&p_url=" + encodeURIComponent('https://item.jd.com/' + num + '.html')
     }
     await $task.fetch(lowerPriceTable).then(response => {
-        const body = response.body
+        const body = JSON.parse(response.body)
         const listLower = body.single.listLower
         if (listLower) {
             for (let i = 0; i < listLower.length; i++) {
