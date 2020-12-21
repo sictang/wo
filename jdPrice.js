@@ -43,7 +43,7 @@ function cancelFavorite() {
             newWareIdArr.splice(num, 1)
         }
         clean(cancelId)
-        clean(cancelId+'price')
+        clean(cancelId + 'price')
         write(JSON.stringify(newWareIdArr), wareId)
         console.log('取消关注')
     }
@@ -101,7 +101,7 @@ async function main() {
                     text += textArr[i]
                 }
                 write(smallPrice, thePrice)
-            }else{
+            } else {
                 console.log('价格没有变动，不推送提醒')
             }
         } else {
@@ -124,7 +124,6 @@ async function getPrice(url) {
         const currentPrice = body.price.p * 1
         const originalPrice = body.price.op * 1
         let buyArr = []
-
         let buy, discount, newPrice
         textArr.push('原价：' + originalPrice + '\n')
         textArr.push('现价：' + currentPrice + '\n')
@@ -170,28 +169,54 @@ async function getPrice(url) {
 
         }
         for (let i = 0; i < couponInfo.length; i++) {
-            const full = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[1] * 1
-            const reduce = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[2] * 1
+            let full = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[1] * 1
+            let reduce = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[2] * 1
             textArr.push('优惠券：' + couponInfo[i].discountText + '\n')
-            for (let i = 1; i < 12; i++) {
-                if (full <= currentPrice * i) {
-                    let unitPrice = (currentPrice * i - reduce) / i
-                    unitPrice = unitPrice.toFixed(2)
-                    textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice + '\n')
-                    storgePrice.push(unitPrice)
-                    if (buyArr) {
-                        for (let i = buy; i < 12; i++) {
-                            if (full <= currentPrice * i) {
-                                let unitPrice = ((currentPrice * i) * discount - reduce) / i
-                                unitPrice = unitPrice.toFixed(2)
-                                textArr.push('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice + '\n')
-                                storgePrice.push(unitPrice)
-                                break
+            if (full) {
+                for (let i = 1; i < 12; i++) {
+                    if (full <= currentPrice * i) {
+                        let unitPrice = (currentPrice * i - reduce) / i
+                        unitPrice = unitPrice.toFixed(2)
+                        textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice + '\n')
+                        storgePrice.push(unitPrice)
+                        if (buyArr) {
+                            for (let i = buy; i < 12; i++) {
+                                if (full <= currentPrice * i) {
+                                    let unitPrice = ((currentPrice * i) * discount - reduce) / i
+                                    unitPrice = unitPrice.toFixed(2)
+                                    textArr.push('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice + '\n')
+                                    storgePrice.push(unitPrice)
+                                    break
+                                }
                             }
-                        }
 
+                        }
+                        break
                     }
-                    break
+                }
+            }else{
+                full = couponInfo[i].discountText.match(/满(.+?)元享(.+?)折/)[1] * 1
+                reduce = couponInfo[i].discountText.match(/满(.+?)元享(.+?)折/)[2] * 1
+                for (let i = 1; i < 12; i++) {
+                    if (full <= currentPrice * i) {
+                        let unitPrice = (currentPrice * i * (reduce*0.1)) / i
+                        unitPrice = unitPrice.toFixed(2)
+                        textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice + '\n')
+                        storgePrice.push(unitPrice)
+                        if (buyArr) {
+                            for (let i = buy; i < 12; i++) {
+                                if (full <= currentPrice * i) {
+                                    let unitPrice = ((currentPrice * i) * discount - reduce) / i
+                                    unitPrice = unitPrice.toFixed(2)
+                                    textArr.push('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice + '\n')
+                                    storgePrice.push(unitPrice)
+                                    break
+                                }
+                            }
+
+                        }
+                        break
+                    }
                 }
             }
         }
