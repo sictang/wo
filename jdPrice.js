@@ -78,6 +78,7 @@ async function main() {
         const name = read(product[i])
         const thePrice = read(product[i]) + 'price'
         textArr = []
+        storgePrice = []
         text += '-----------------------------\n'
         text += name + '\n'
         const price = {
