@@ -96,16 +96,16 @@ async function main() {
         const smallPrice = judge(storgePrice)
         if (read(thePrice)) {
             if (smallPrice < read(thePrice)) {
-                textArr.splice(1, 0, '降价了，现在是：' + smallPrice +'\n')
+                textArr.splice(2, 0, '降价了，现在是：' + smallPrice +'\n')
                 for (let i = 0; i < textArr.length; i++) {
                     text += textArr[i]
                 }
                 write(smallPrice, thePrice)
             } else {
-                console.log('今天最低价是：' + smallPrice +'\n')
+                console.log(name + '\n'+'今天最低价是：' + smallPrice +'\n')
             }
         } else {
-            textArr.splice(1, 0, '今天最低价是：' + smallPrice +'\n')
+            textArr.splice(2, 0, '今天最低价是：' + smallPrice +'\n')
             for (let i = 0; i < textArr.length; i++) {
                 text += textArr[i]
             }
