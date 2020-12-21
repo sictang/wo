@@ -107,9 +107,9 @@ async function main() {
         } else {
             write(smallPrice, thePrice)
             for (let i = 0; i < textArr.length; i++) {
-                    text += textArr[i]
-                }
-                write(smallPrice, thePrice)
+                text += textArr[i]
+            }
+            write(smallPrice, thePrice)
             console.log('首次写入价格成功')
         }
     }
@@ -173,8 +173,13 @@ async function getPrice(url) {
 
         }
         for (let i = 0; i < couponInfo.length; i++) {
-            let full = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[1] * 1
-            let reduce = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[2] * 1
+            let full, reduce
+            try {
+                full = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[1] * 1
+                reduce = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[2] * 1
+            } catch (error) {
+                console.log(error)
+            }
             textArr.push('优惠券：' + couponInfo[i].discountText + '\n')
             if (full) {
                 for (let i = 1; i < 12; i++) {
@@ -198,12 +203,12 @@ async function getPrice(url) {
                         break
                     }
                 }
-            }else{
+            } else {
                 full = couponInfo[i].discountText.match(/满(.+?)元享(.+?)折/)[1] * 1
                 reduce = couponInfo[i].discountText.match(/满(.+?)元享(.+?)折/)[2] * 1
                 for (let i = 1; i < 12; i++) {
                     if (full <= currentPrice * i) {
-                        let unitPrice = (currentPrice * i * (reduce*0.1)) / i
+                        let unitPrice = (currentPrice * i * (reduce * 0.1)) / i
                         unitPrice = unitPrice.toFixed(2)
                         textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice + '\n')
                         storgePrice.push(unitPrice)
@@ -224,8 +229,8 @@ async function getPrice(url) {
                 }
             }
         }
-    }).catch(erro => {
-        console.log(erro)
+    }).catch(error => {
+        console.log(error)
     })
 }
 
@@ -253,8 +258,8 @@ async function getLowerPrice(num) {
                 }
             }
         }
-    }).catch(erro => {
-        console.log(erro)
+    }).catch(error => {
+        console.log(error)
     })
 }
 
