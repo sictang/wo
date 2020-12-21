@@ -106,6 +106,10 @@ async function main() {
             }
         } else {
             write(smallPrice, thePrice)
+            for (let i = 0; i < textArr.length; i++) {
+                    text += textArr[i]
+                }
+                write(smallPrice, thePrice)
             console.log('首次写入价格成功')
         }
     }
