@@ -79,8 +79,8 @@ async function main() {
         const thePrice = read(product[i]) + 'price'
         textArr = []
         storgePrice = []
-        text += '-----------------------------\n'
-        text += name + '\n'
+        textArr.push('-----------------------------\n')
+        textArr.push(name + '\n')
         const price = {
             method: 'get',
             url: 'https://item-soa.jd.com/getWareBusiness?skuId=' + product[i],
@@ -96,16 +96,16 @@ async function main() {
         const smallPrice = judge(storgePrice)
         if (read(thePrice)) {
             if (smallPrice < read(thePrice)) {
-                textArr.splice(1, 0, '降价了，现在是：' + smallPrice)
+                textArr.splice(1, 0, '降价了，现在是：' + smallPrice +'\n')
                 for (let i = 0; i < textArr.length; i++) {
                     text += textArr[i]
                 }
                 write(smallPrice, thePrice)
             } else {
-                console.log('价格没有变动，不推送提醒')
+                console.log('今天最低价是：' + smallPrice +'\n')
             }
         } else {
-            write(smallPrice, thePrice)
+            textArr.splice(1, 0, '今天最低价是：' + smallPrice +'\n')
             for (let i = 0; i < textArr.length; i++) {
                 text += textArr[i]
             }
