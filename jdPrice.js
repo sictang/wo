@@ -76,7 +76,7 @@ async function main() {
     const product = JSON.parse(read(wareId))
     for (let i = 0; i < product.length; i++) {
         const name = read(product[i])
-        const thePrice = read(product[i]) + 'price'
+        const thePrice = product[i] + 'price'
         textArr = []
         storgePrice = []
         textArr.push('-----------------------------\n')
