@@ -289,7 +289,7 @@ async function plusDiscount(num){
         body = response.body
         body = body.match('可与PLUS价、满减、券等优惠叠加使用')       
     })
-    if(body != null){return true}  
+    if(body != null){return true}else{return 0}  
 }
 
 function write(key, val) {
