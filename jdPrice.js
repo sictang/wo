@@ -1,5 +1,3 @@
-const { response } = require("express")
-
 const wareId = 'wareId'
 const wareIdArr = []
 let textArr = []
