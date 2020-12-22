@@ -139,9 +139,7 @@ async function getPrice(url) {
         }
         for (let i = 0; i < acitvity.length; i++) {
             value = acitvity[i].value
-            if (value.indexOf('享受单件价') != -1) { value = false }
-            if (value.indexOf('换购') != -1) { value = false }
-            if (value.indexOf('返券包') != -1) { value = false }
+          if (value.indexOf('享受单件价') != -1 || value.indexOf('换购') != -1 || value.indexOf('返券包') != -1) { value = false }
             //促销类型进行计算
             switch (value) {
                 case false:
