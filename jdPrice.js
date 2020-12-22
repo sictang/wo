@@ -93,19 +93,19 @@ async function main() {
         }
         await getPrice(price)
         await getLowerPrice(product[i])
-        const smallPrice = judge(storgePrice)
+        const smallPrice = JSON.stringify(judge(storgePrice))
         if (read(thePrice)) {
             if (smallPrice < read(thePrice)) {
-                textArr.splice(2, 0, '降价了，现在是：' + smallPrice +'\n')
+                textArr.splice(2, 0, '降价了，现在是：' + smallPrice + '\n')
                 for (let i = 0; i < textArr.length; i++) {
                     text += textArr[i]
                 }
                 write(smallPrice, thePrice)
             } else {
-                console.log(name + '\n'+'今天最低价是：' + smallPrice +'\n')
+                console.log(name + '\n' + '今天最低价是：' + smallPrice + '\n')
             }
         } else {
-            textArr.splice(2, 0, '今天最低价是：' + smallPrice +'\n')
+            textArr.splice(2, 0, '今天最低价是：' + smallPrice + '\n')
             for (let i = 0; i < textArr.length; i++) {
                 text += textArr[i]
             }
@@ -125,10 +125,11 @@ async function getPrice(url) {
         const acitvity = body.promotion.activity
         const gift = body.promotion.gift
         const couponInfo = body.couponInfo
-        const currentPrice = body.price.p * 1
-        const originalPrice = body.price.op * 1
+        const originalPrice = body.price.op
+        let currentPrice = body.price.p
         let buyArr = []
-        let buy, discount, newPrice
+        let discountArr = []
+        let buy, discount, newPrice, fullErro, reduction, value
         textArr.push('原价：' + originalPrice + '\n')
         textArr.push('现价：' + currentPrice + '\n')
         storgePrice.push(currentPrice)
@@ -137,95 +138,95 @@ async function getPrice(url) {
             textArr.push('赠品：' + gift[i].value + '\n')
         }
         for (let i = 0; i < acitvity.length; i++) {
-
-            if (acitvity[i].value.indexOf('享受单件价') === -1) {
-                if (acitvity[i].value.indexOf('换购') === -1) {
-                    if (acitvity[i].value.indexOf('返券包') === -1) {
-                        textArr.push('促销：' + acitvity[i].value + '\n')
-                        buyArr = acitvity[i].value.match(/满(.+?)件/g)
-                        const discountArr = acitvity[i].value.match(/打(.+?)折/g)
-                        const fullErro = acitvity[i].value.match(/满(.+?)元减(.+?)元/)[1]
-                        const reduction = acitvity[i].value.match(/满(.+?)元减(.+?)元/)[2]
-                        if (buyArr) {
-                            for (let i = 0; i < buyArr.length; i++) {
-                                buy = buyArr[i].match(/满(.+?)件/)[1]
-                                discount = discountArr[i].match(/打(.+?)折/)[1] * 0.1
-                                disPrice = (currentPrice * buy) * discount / buy
-                                disPrice = disPrice.toFixed(2)
-                                textArr.push('满减：' + buy + '件：' + disPrice + '，总价：' + buy * disPrice + '\n')
-                                storgePrice.push(disPrice)
-                            }
-                        } else if (fullErro) {
-                            for (let i = 1; i < 12; i++) {
-                                if (fullErro <= currentPrice * i) {
-                                    newPrice = (currentPrice * i - reduction) / i
-                                    newPrice = newPrice.toFixed(2)
-                                    textArr.push('促销：' + i + '件：' + newPrice + '，总价：' + newPrice * i + '\n')
-                                    storgePrice.push(newPrice)
-                                    break
-                                }
-                            }
-
+            value = acitvity[i].value
+            if (value.indexOf('享受单件价') != -1) { value = false }
+            if (value.indexOf('换购') != -1) { value = false }
+            if (value.indexOf('返券包') != -1) { value = false }
+            //促销类型进行计算
+            switch (value) {
+                case (value.match(/满(.+?)件/) || {}).input:
+                    buyArr = value.match(/满(.+?)件/g)
+                    discountArr = value.match(/打(.+?)折/g)
+                    for (let i = 0; i < buyArr.length; i++) {
+                        buy = buyArr[i].match(/满(.+?)件/)[1]
+                        discount = discountArr[i].match(/打(.+?)折/)[1] * 0.1
+                        disPrice = (currentPrice * buy) * discount / buy
+                        disPrice = disPrice.toFixed(2)
+                        textArr.push('促销：' + value + '\n')
+                        textArr.push('满减：' + buy + '件：' + disPrice + '，总价：' + buy * disPrice + '\n')
+                        storgePrice.push(disPrice)
+                    }
+                    break
+                case (value.match(/满(.+?)元减(.+?)元/) || {}).input:
+                    fullErro = value.match(/满(.+?)元减(.+?)元/)[1]
+                    reduction = value.match(/满(.+?)元减(.+?)元/)[2]
+                    for (let i = 1; i < 12; i++) {
+                        if (fullErro <= currentPrice * i) {
+                            newPrice = (currentPrice * i - reduction) / i
+                            newPrice = newPrice.toFixed(2)
+                            textArr.push('促销：' + value + '\n')
+                            textArr.push('促销：' + i + '件：' + newPrice + '，总价：' + newPrice * i + '\n')
+                            storgePrice.push(newPrice)
+                            break
                         }
                     }
-                }
+                    break
+                case (value.match(/每满.+?可减/) || {}).input:
+                    fullErro = value.match(/每满(.+?)元/)[1]
+                    reduction = value.match(/可减(.+?)元/)[1]
+                    for (let i = 1; i < 12; i++) {
+                        if (fullErro <= currentPrice * i) {
+                            newPrice = (currentPrice * i - reduction) / i
+                            newPrice = newPrice.toFixed(2)
+                            textArr.push('促销：' + value + '\n')
+                            textArr.push('促销：' + i + '件：' + newPrice + '，总价：' + newPrice * i + '\n')
+                            storgePrice.push(newPrice)
+                            break
+                        }
+                    }
+                    break
+                default:
+                    !value ? console.log(value) : console.log('没有匹配到促销活动')
+                    break
             }
-
-        }
-        for (let i = 0; i < couponInfo.length; i++) {
-            let full, reduce
-            try {
-                full = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[1] * 1
-                reduce = couponInfo[i].discountText.match(/满(.+?)减(.+?)的/)[2] * 1
-            } catch (error) {
-                console.log(error)
-            }
-            textArr.push('优惠券：' + couponInfo[i].discountText + '\n')
-            if (full) {
-                for (let i = 1; i < 12; i++) {
-                    if (full <= currentPrice * i) {
-                        let unitPrice = (currentPrice * i - reduce) / i
-                        unitPrice = unitPrice.toFixed(2)
-                        textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice + '\n')
-                        storgePrice.push(unitPrice)
-                        if (buyArr) {
-                            for (let i = buy; i < 12; i++) {
-                                if (full <= currentPrice * i) {
-                                    let unitPrice = ((currentPrice * i) * discount - reduce) / i
-                                    unitPrice = unitPrice.toFixed(2)
-                                    textArr.push('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice + '\n')
-                                    storgePrice.push(unitPrice)
-                                    break
-                                }
+            for (let i = 0; i < couponInfo.length; i++) {
+                let full, reduce, unitPrice
+                const discountText = couponInfo[i].discountText
+                //优惠券种类
+                switch (discountText) {
+                    case (discountText.match(/满.+?减.+?的/) || {}).input:
+                        full = discountText.match(/满(.+?)减(.+?)的/)[1]
+                        reduce = discountText.match(/满(.+?)减(.+?)的/)[2]
+                        for (let i = 1; i < 12; i++) {
+                            if (full <= currentPrice * i) {
+                                currentPrice = disPrice || newPrice || currentPrice
+                                unitPrice = (currentPrice * i - reduce) / i
+                                unitPrice = unitPrice.toFixed(2)
+                                textArr.push('优惠券：' + discountText + '\n')
+                                textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice + '\n')
+                                storgePrice.push(unitPrice)
+                                break
                             }
-
                         }
                         break
-                    }
-                }
-            } else {
-                full = couponInfo[i].discountText.match(/满(.+?)元享(.+?)折/)[1] * 1
-                reduce = couponInfo[i].discountText.match(/满(.+?)元享(.+?)折/)[2] * 1
-                for (let i = 1; i < 12; i++) {
-                    if (full <= currentPrice * i) {
-                        let unitPrice = (currentPrice * i * (reduce * 0.1)) / i
-                        unitPrice = unitPrice.toFixed(2)
-                        textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice + '\n')
-                        storgePrice.push(unitPrice)
-                        if (buyArr) {
-                            for (let i = buy; i < 12; i++) {
-                                if (full <= currentPrice * i) {
-                                    let unitPrice = ((currentPrice * i) * discount - reduce) / i
-                                    unitPrice = unitPrice.toFixed(2)
-                                    textArr.push('满减：' + i + '件：' + unitPrice + '，总价：' + i * unitPrice + '\n')
-                                    storgePrice.push(unitPrice)
-                                    break
-                                }
+                    case (discountText.match(/满.+?元享.+?折/) || {}).input:
+                        full = discountText.match(/满(.+?)元享(.+?)折/)[1]
+                        reduce = discountText.match(/满(.+?)元享(.+?)折/)[2]
+                        for (let i = 1; i < 12; i++) {
+                            if (full <= currentPrice * i) {
+                                currentPrice = disPrice || newPrice || currentPrice
+                                let unitPrice = (currentPrice * i * (reduce * 0.1)) / i
+                                unitPrice = unitPrice.toFixed(2)
+                                textArr.push('优惠券：' + discountText + '\n')
+                                textArr.push('优惠券：' + i + '件:' + unitPrice + '，总价：' + i * unitPrice + '\n')
+                                storgePrice.push(unitPrice)
                             }
-
                         }
                         break
-                    }
+                    default:
+                        !discountText ? console.log(value) : console.log('没有找到优惠券')
+                        break
+
                 }
             }
         }
@@ -263,8 +264,6 @@ async function getLowerPrice(num) {
     })
 }
 
-
-
 function write(key, val) {
     return $prefs.setValueForKey(key, val)
 }
@@ -284,17 +283,10 @@ function notify(title, subtitle, text) {
     $notify(title, subtitle, text)
 }
 function judge(a) {
-    for (let b = 0; b < a.length; b++) {
-        let num = 0
-        for (let i = 0; i < a.length; i++) {
-            if (a[b] <= a[i]) {
-                num += 1
-            } else {
-                break
-            }
-        }
-        if (num === a.length) {
-            return a[b]
-        }
+    let b = a[0]
+    for (let i = 1; i < a.length; i++) {
+        b < a[i] ? null : b = a[i]
     }
+    return b
 }
+
