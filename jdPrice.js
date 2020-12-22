@@ -1,8 +1,11 @@
+const { response } = require("express")
+
 const wareId = 'wareId'
 const wareIdArr = []
 let textArr = []
 let storgePrice = []
 let text = ''
+let plus = 0
 if (typeof $request != 'undefined') {
     if ($request.url.match('addFavorite')) {
         addFavorite()
@@ -91,9 +94,11 @@ async function main() {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
             }
         }
+        plus = await plusDiscount(product[i])
         await getPrice(price)
-        await getLowerPrice(product[i])
-        const smallPrice = JSON.stringify(judge(storgePrice))
+        await getLowerPrice(product[i])       
+        let smallPrice = judge(storgePrice)- plus
+        smallPrice = JSON.stringify(smallPrice)
         if (read(thePrice)) {
             if (smallPrice < read(thePrice)) {
                 textArr.splice(2, 0, '降价了，现在是：' + smallPrice + '\n')
@@ -129,17 +134,21 @@ async function getPrice(url) {
         let currentPrice = body.price.p
         let buyArr = []
         let discountArr = []
-        let buy, discount, newPrice, fullErro, reduction, value, disPrice
+        let buy, discount, newPrice, fullErro, reduction, value, disPrice      
         textArr.push('原价：' + originalPrice + '\n')
         textArr.push('现价：' + currentPrice + '\n')
         storgePrice.push(currentPrice)
 
+        if(plus){
+            plus = currentPrice*0.05
+            plus = plus.toFixed(2)
+        }
         for (let i = 0; i < gift.length; i++) {
             textArr.push('赠品：' + gift[i].value + '\n')
         }
         for (let i = 0; i < acitvity.length; i++) {
             value = acitvity[i].value
-          if (value.indexOf('享受单件价') != -1 || value.indexOf('换购') != -1 || value.indexOf('返券包') != -1) { value = false }
+            if (value.indexOf('享受单件价') != -1 || value.indexOf('换购') != -1 || value.indexOf('返券包') != -1) { value = false }
             //促销类型进行计算
             switch (value) {
                 case false:
@@ -264,6 +273,25 @@ async function getLowerPrice(num) {
     }).catch(error => {
         console.log(error)
     })
+}
+//plus价格
+async function plusDiscount(num){
+    let body = null
+    const dissountTable = {
+        method: 'get',
+        url: 'https://wq.jd.com/commodity/promo/get?skuid=' + num,
+        headers: {
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'accept-encoding': 'gzip, deflate, br',
+            'accept-language': 'zh-CN,zh;q=0.9',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+        }
+    }
+    await $task.fetch(dissountTable).then(response =>{
+        body = response.body
+        body = body.match('可与PLUS价、满减、券等优惠叠加使用')       
+    })
+    if(body != null){return true}  
 }
 
 function write(key, val) {
