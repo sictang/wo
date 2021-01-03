@@ -151,7 +151,8 @@ async function statisticsReward(){
     console.log('今天获得'+statistics+'元')
     if(statistics != 0){
     notify('美团买菜','今天总共获得'+statistics+'元')
-    }else {$done()}
+    }
+    $done()
 }
 statisticsReward()
 
@@ -169,5 +170,5 @@ function notify(title, subtitle, text) {
         text = ''
     }
     $notify(title, subtitle, text)
-    $done()
+    
 }
